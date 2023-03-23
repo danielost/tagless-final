@@ -1,2 +1,2 @@
 # tagless-final
-Learnin tagless final style in Scala
+Learning tagless final style in Scala
