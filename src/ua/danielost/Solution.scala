@@ -48,7 +48,7 @@ object Solution {
       }
     }
 
-    object TaglessSolution {
+    object TaglessInitial {
       trait Expr[T]
       case class B(boolean: Boolean) extends Expr[Boolean]
       case class And(a: Expr[Boolean], b: Expr[Boolean]) extends Expr[Boolean]
@@ -66,17 +66,47 @@ object Solution {
       }
     }
 
-    def demoTagless(): Unit = {
-      import TaglessSolution._
+    def demoTaglessInitial(): Unit = {
+      import TaglessInitial._
       println(eval(Or(B(true), B(true))))
       println(eval(Sum(I(15), I(-5))))
     }
 
+    object TaglessFinal {
+      trait Expr[T] {
+        val value: T
+      }
 
+      def b(boolean: Boolean): Expr[Boolean] = new Expr[Boolean] {
+        override val value: Boolean = boolean
+      }
+
+      def i(int: Int): Expr[Int] = new Expr[Int] {
+        override val value: Int = int
+      }
+
+      def or(a: Expr[Boolean], b: Expr[Boolean]) = new Expr[Boolean] {
+        override val value: Boolean = a.value || b.value
+      }
+
+      def sum(a: Expr[Int], b: Expr[Int]) = new Expr[Int] {
+        override val value: Int = a.value + b.value
+      }
+
+      def eval[T](expr: Expr[T]): T = expr.value
+    }
+
+    def demoFinalTagless(): Unit = {
+      import TaglessFinal._
+      println(eval(or(b(true), b(true))))
+      println(eval(sum(i(15), i(-5))))
+    }
   }
 
   def main(args: Array[String]) : Unit = {
     import ExpressionProblem._
-    demoTagless()
+    demoTaglessInitial()
+    println("---------")
+    demoFinalTagless()
   }
 }
